@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:aether="antlib:org.eclipse.aether.ant"
+         xmlns:artifact="antlib:org.apache.maven.artifact.ant"
+         xmlns:ball="antlib:ball.util.ant"
+         xmlns:ivy="antlib:org.apache.ivy.ant"
+         xmlns:spring-boot="antlib:org.springframework.boot.ant"
+         name="ball-databind" basedir="." default="jar">
+
+  <description>
+    ball-databind
+    ----------------------
+    Data Binding Utilities
+
+    $Id$
+  </description>
+
+  <aether:resolve>
+    <dependencies>
+      <dependency coords="ball:parent:1.0:xml:compile"/>
+    </dependencies>
+    <properties/>
+  </aether:resolve>
+  <import file="${ball:parent:xml}"/>
+
+  <target name="om-read-value"
+          description="--> Invokes &lt;om-read-value/&gt; task."
+          depends="jar-classes">
+    <taskdef classpathref="build.classpath"
+             resource="ball/databind/ant/defaults.properties"/>
+    <om-read-value classpathref="build.classpath">
+      <configure name="INDENT_OUTPUT"/>
+    </om-read-value>
+  </target>
+
+</project>
