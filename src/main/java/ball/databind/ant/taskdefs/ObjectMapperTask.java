@@ -5,7 +5,6 @@
  */
 package ball.databind.ant.taskdefs;
 
-import ball.swing.table.MapTableModel;
 import ball.util.MapUtil;
 import ball.util.PropertiesImpl;
 import ball.util.ant.taskdefs.AbstractClasspathTask;
