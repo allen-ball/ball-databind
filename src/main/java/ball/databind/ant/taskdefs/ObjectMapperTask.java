@@ -14,10 +14,11 @@ import ball.util.ant.types.StringAttributeType;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.type.TypeBase;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -160,26 +161,38 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
             this.collection = collection;
         }
 
+        /**
+         * Method to construct a {@link JavaType} from {@link getType()} and
+         * {@link getCollection()}.
+         *
+         * @return      The {@link JavaType}.
+         */
+        protected JavaType getJavaType() {
+            TypeFactory factory = mapper.getTypeFactory();
+            JavaType type = null;
+
+            if (! isNil(getCollection())) {
+                type =
+                    factory
+                    .constructCollectionType(getClassForName(getCollection())
+                                             .asSubclass(Collection.class),
+                                             getClassForName(getType()));
+            } else {
+                type =
+                    factory
+                    .constructSimpleType(getClassForName(getType()),
+                                         new JavaType[] { });
+            }
+
+            return type;
+        }
+
         @Override
         public void execute() throws BuildException {
             super.execute();
 
             try {
-                Object value = null;
-                Class<?> type = getClassForName(getType());
-
-                if (! isNil(getCollection())) {
-                    Class<? extends Collection> collection =
-                        getClassForName(getCollection())
-                        .asSubclass(Collection.class);
-                    TypeBase base =
-                        mapper.getTypeFactory()
-                        .constructCollectionType(collection, type);
-
-                    value = mapper.readValue(getFile(), base);
-                } else {
-                    value = mapper.readValue(getFile(), type);
-                }
+                Object value = mapper.readValue(getFile(), getJavaType());
 
                 log(String.valueOf(value));
             } catch (BuildException exception) {
