@@ -166,8 +166,11 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
          * {@link getCollection()}.
          *
          * @return      The {@link JavaType}.
+         *
+         * @throws      Exception       If the {@link JavaType} cannot be
+         *                              constructed.
          */
-        protected JavaType getJavaType() {
+        protected JavaType getJavaType() throws Exception {
             TypeFactory factory = mapper.getTypeFactory();
             JavaType type = null;
 
