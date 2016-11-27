@@ -162,8 +162,8 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
         }
 
         /**
-         * Method to construct a {@link JavaType} from {@link getType()} and
-         * {@link getCollection()}.
+         * Method to construct a {@link JavaType} from {@link #getType()}
+         * and {@link #getCollection()}.
          *
          * @return      The {@link JavaType}.
          *
