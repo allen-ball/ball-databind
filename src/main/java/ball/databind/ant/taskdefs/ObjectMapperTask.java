@@ -33,7 +33,7 @@ import static ball.util.StringUtil.NIL;
 import static ball.util.StringUtil.isNil;
 
 /**
- * Abstract {@link.uri databind://ant.apache.org/ Ant} base
+ * Abstract {@link.uri http://ant.apache.org/ Ant} base
  * {@link org.apache.tools.ant.Task} for {@link ObjectMapper} tasks.
  *
  * {@bean.info}
