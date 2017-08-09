@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2016 Allen D. Ball.  All rights reserved.
+ * Copyright 2016, 2017 Allen D. Ball.  All rights reserved.
  */
 package ball.databind.ant.taskdefs;
 
@@ -42,12 +42,28 @@ import static ball.util.StringUtil.isNil;
  * @version $Revision$
  */
 public abstract class ObjectMapperTask extends AbstractClasspathTask {
-    protected final ObjectMapper mapper = new ObjectMapper();
+    protected final ObjectMapper mapper;
 
     /**
-     * Sole constructor.
+     * No-argument constructor.
      */
-    protected ObjectMapperTask() { super(); }
+    protected ObjectMapperTask() { this(new ObjectMapper()); }
+
+    /**
+     * Protected constructor to allow subclasses to specify the
+     * {@link ObjectMapper}.
+     *
+     * @param   mapper          The {@link ObjectMapper}.
+     */
+    protected ObjectMapperTask(ObjectMapper mapper) {
+        super();
+
+        if (mapper != null) {
+            this.mapper = mapper;
+        } else {
+            throw new NullPointerException("mapper");
+        }
+    }
 
     public void addConfiguredConfigure(Setting setting) throws BuildException {
         Enum<?> feature = setting.getEnum();
@@ -143,9 +159,17 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
         private String collection = null;
 
         /**
-         * Sole constructor.
+         * No-argument constructor.
          */
-        public ReadValue() { super(); }
+        public ReadValue() { this(new ObjectMapper()); }
+
+        /**
+         * Protected constructor to allow subclasses to specify the
+         * {@link ObjectMapper}.
+         *
+         * @param       mapper  The {@link ObjectMapper}.
+         */
+        protected ReadValue(ObjectMapper mapper) { super(mapper); }
 
         @NotNull
         public File getFile() { return file; }

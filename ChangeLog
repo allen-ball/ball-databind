@@ -1,3 +1,9 @@
+2017-08-09  Allen D. Ball  <ball@sol>
+
+	* src/main/java/ball/databind/ant/taskdefs/ObjectMapperTask.java:
+	Added protected constructors to allow subclasses to specify
+	pre-configured ObjectMappers.
+
 2016-10-29  Allen D. Ball  <ball@sol.local>
 
 	* Initial writing.
