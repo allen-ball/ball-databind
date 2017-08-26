@@ -1,3 +1,9 @@
+2017-08-26  Allen D. Ball  <ball@sol>
+
+	* src/main/java/ball/databind/JSONBean.java,
+	src/main/java/ball/databind/JSONBeanDeserializer.java:
+	Initial writing.
+
 2017-08-09  Allen D. Ball  <ball@sol>
 
 	* src/main/java/ball/databind/ant/taskdefs/ObjectMapperTask.java:
