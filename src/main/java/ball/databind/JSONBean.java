@@ -23,6 +23,10 @@ import java.io.IOException;
  */
 @JsonSerialize(using = JSONBean.Serializer.class)
 public abstract class JSONBean {
+
+    /**
+     * {@link ObjectMapper} configured for {@link JSONBean}s.
+     */
     protected static final ObjectMapper OM =
         new ObjectMapper()
         .configure(SerializationFeature.INDENT_OUTPUT, true);

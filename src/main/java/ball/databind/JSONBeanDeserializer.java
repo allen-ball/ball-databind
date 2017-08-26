@@ -25,7 +25,11 @@ import java.util.ArrayList;
  * @version $Revision$
  */
 public class JSONBeanDeserializer extends JsonDeserializer<JSONBean> {
-    private static final ObjectMapper OM = new ObjectMapper();
+
+    /**
+     * {@link ObjectMapper}
+     */
+    protected static final ObjectMapper OM = new ObjectMapper();
 
     private final Class<? extends JSONBean> supertype;
     private final ArrayList<BeanInfo> list = new ArrayList<>();
