@@ -1,3 +1,8 @@
+2017-09-04  Allen D. Ball  <ball@sol>
+
+	* src/main/java/ball/databind/ModuleImpl.java:
+	Initial writing (provided as template).
+
 2017-08-26  Allen D. Ball  <ball@sol>
 
 	* src/main/java/ball/databind/JSONBean.java,
