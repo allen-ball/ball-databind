@@ -1,5 +1,9 @@
 2017-09-09  Allen D. Ball  <ball@sol>
 
+	* src/main/java/ball/databind/ant/taskdefs/ObjectMapperTask.java:
+	Added registerModules attribute (default: false).
+	Support ObjectMapper features configured as Project properties.
+
 	* src/main/java/ball/databind/ObjectMapperFeature.java:
 	Initial writing.
 

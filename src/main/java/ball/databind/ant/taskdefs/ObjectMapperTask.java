@@ -11,25 +11,21 @@ import ball.util.ant.taskdefs.AbstractClasspathTask;
 import ball.util.ant.taskdefs.AntTask;
 import ball.util.ant.taskdefs.NotNull;
 import ball.util.ant.types.StringAttributeType;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PropertyHelper;
 
-import static ball.util.StringUtil.NIL;
+import static ball.databind.ObjectMapperFeature.MAP;
+import static ball.databind.ObjectMapperFeature.configure;
 import static ball.util.StringUtil.isNil;
 
 /**
@@ -42,6 +38,8 @@ import static ball.util.StringUtil.isNil;
  * @version $Revision$
  */
 public abstract class ObjectMapperTask extends AbstractClasspathTask {
+    private boolean registerModules = false;
+    private final ArrayList<Setting> settings = new ArrayList<>();
     protected final ObjectMapper mapper;
 
     /**
@@ -65,34 +63,47 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
         }
     }
 
-    public void addConfiguredConfigure(Setting setting) throws BuildException {
-        Enum<?> feature = setting.getEnum();
-        boolean value = setting.booleanValue();
+    public boolean getRegisterModules() { return registerModules; }
+    public void setRegisterModules(boolean isSet) { registerModules = isSet; }
+    public void setRegisterModules(String string) {
+        setRegisterModules(PropertyHelper.toBoolean(string));
+    }
 
-        if (feature instanceof DeserializationFeature) {
-            mapper.configure((DeserializationFeature) feature, value);
-        } else if (feature instanceof JsonGenerator.Feature) {
-            mapper.configure((JsonGenerator.Feature) feature, value);
-        } else if (feature instanceof JsonParser.Feature) {
-            mapper.configure((JsonParser.Feature) feature, value);
-        } else if (feature instanceof MapperFeature) {
-            mapper.configure((MapperFeature) feature, value);
-        } else if (feature instanceof SerializationFeature) {
-            mapper.configure((SerializationFeature) feature, value);
-        } else {
-            throw new BuildException("Unrecognized feature `"
-                                     + setting.getName() + "'");
-        }
+    public void addConfiguredConfigure(Setting setting) {
+        settings.add(setting);
     }
 
     @Override
     public void init() throws BuildException {
         super.init();
 
-        PropertiesImpl properties = new PropertiesImpl();
+        try {
+            PropertiesImpl properties = new PropertiesImpl();
 
-        MapUtil.copy(getProject().getProperties(), properties);
-        properties.configure(this);
+            MapUtil.copy(getProject().getProperties(), properties);
+            properties.configure(this);
+
+            if (getRegisterModules()) {
+                mapper.registerModules(ObjectMapper.findModules(getClassLoader()));
+            }
+
+            for (Map.Entry<String,Object> entry :
+                     getProject().getProperties().entrySet()) {
+                if (MAP.containsKey(entry.getKey())) {
+                    configure(mapper,
+                              MAP.get(entry.getKey()),
+                              PropertyHelper.toBoolean(entry.getValue()));
+                }
+            }
+
+            for (Setting setting : settings) {
+                configure(mapper, setting.getEnum(), setting.booleanValue());
+            }
+        } catch (BuildException exception) {
+            throw exception;
+        } catch (Throwable throwable) {
+            throw new BuildException(throwable);
+        }
     }
 
     /**
@@ -101,25 +112,6 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
      * {@bean.info}
      */
     public static class Setting extends StringAttributeType {
-        private static final SortedMap<String,Enum<?>> MAP;
-
-        static {
-            TreeMap<String,Enum<?>> map =
-                new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-            for (EnumSet<? extends Enum<?>> set :
-                     Arrays.asList(EnumSet.allOf(DeserializationFeature.class),
-                                   EnumSet.allOf(JsonGenerator.Feature.class),
-                                   EnumSet.allOf(JsonParser.Feature.class),
-                                   EnumSet.allOf(MapperFeature.class),
-                                   EnumSet.allOf(SerializationFeature.class))) {
-                for (Enum<?> feature : set) {
-                    map.put(feature.name(), feature);
-                }
-            }
-
-            MAP = Collections.unmodifiableSortedMap(map);
-        }
 
         /**
          * Sole constructor.
@@ -223,8 +215,6 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
 
                 log(String.valueOf(value));
             } catch (BuildException exception) {
-                throw exception;
-            } catch (RuntimeException exception) {
                 throw exception;
             } catch (Throwable throwable) {
                 throw new BuildException(throwable);
