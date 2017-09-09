@@ -1,5 +1,8 @@
 2017-09-09  Allen D. Ball  <ball@sol>
 
+	* src/main/java/ball/databind/ObjectMapperFeature.java:
+	Initial writing.
+
 	* Use ModuleImpl instead of annotations to register
 	JSONBean.Serializer.
 
