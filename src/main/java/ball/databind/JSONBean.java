@@ -6,12 +6,13 @@
 package ball.databind;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.IOException;
 
 /**
@@ -21,14 +22,17 @@ import java.io.IOException;
  * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
  * @version $Revision$
  */
-@JsonSerialize(using = JSONBean.Serializer.class)
 public abstract class JSONBean {
 
     /**
-     * {@link ObjectMapper} configured for {@link JSONBean}s.
+     * Unconfigured {@link ObjectMapper} available for implementing subclass
+     * methods.
      */
     protected static final ObjectMapper OM =
         new ObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .configure(MapperFeature.USE_ANNOTATIONS, false)
         .configure(SerializationFeature.INDENT_OUTPUT, true);
 
     protected JsonNode node = null;
@@ -51,7 +55,7 @@ public abstract class JSONBean {
 
         if (node != null) {
             try {
-                string = JSONBean.OM.writeValueAsString(node);
+                string = OM.writeValueAsString(node);
             } catch (Exception exception) {
                 throw new IllegalStateException(exception);
             }
