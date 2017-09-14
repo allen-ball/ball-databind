@@ -1,5 +1,8 @@
 2017-09-13  Allen D. Ball  <ball@sol>
 
+	* src/main/java/ball/databind/AbstractObjectMapperConfiguration.java:
+	Initial writing.
+
 	* src/main/java/ball/databind/ObjectMapperFeature.java:
 	Use EnumLookupMap.
 
