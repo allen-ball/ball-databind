@@ -17,8 +17,8 @@ import java.util.SortedMap;
 import static java.util.Collections.unmodifiableSortedMap;
 
 /**
- * Abstract class with static {@link SortedMap} member of all
- * {@link ObjectMapper} features.
+ * Abstract class with static {@link SortedMap} ({@link EnumLookupMap})
+ * member of all {@link ObjectMapper} features.
  *
  * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
  * @version $Revision$
