@@ -1,3 +1,8 @@
+2017-09-13  Allen D. Ball  <ball@sol>
+
+	* src/main/java/ball/databind/ObjectMapperFeature.java:
+	Use EnumLookupMap.
+
 2017-09-09  Allen D. Ball  <ball@sol>
 
 	* src/main/java/ball/databind/ant/taskdefs/ObjectMapperTask.java:

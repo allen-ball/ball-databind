@@ -5,23 +5,20 @@
  */
 package ball.databind;
 
+import ball.util.EnumLookupMap;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.SortedMap;
-import java.util.TreeMap;
+
+import static java.util.Collections.unmodifiableSortedMap;
 
 /**
- * Abstract class with static {@link Set} and {@link SortedMap} members of
- * all {@link ObjectMapper} features.
+ * Abstract class with static {@link SortedMap} member of all
+ * {@link ObjectMapper} features.
  *
  * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
  * @version $Revision$
@@ -29,43 +26,15 @@ import java.util.TreeMap;
 public abstract class ObjectMapperFeature {
 
     /**
-     * The {@link Set} of {@link ObjectMapper} features:
-     * {@link MapperFeature}s,
-     * {@link com.fasterxml.jackson.core.JsonGenerator.Feature}s,
-     * {@link com.fasterxml.jackson.core.JsonParser.Feature}s,
-     * {@link DeserializationFeature}s, and {@link SerializationFeature}s.
-     */
-    public static final Set<Enum<?>> SET;
-
-    /**
      * The {@link SortedMap} of feature names to their corresponding
-     * {@link Enum} (see {@link #SET}).
+     * {@link Enum}.
      */
-    public static final SortedMap<String,Enum<?>> MAP;
-
-    static {
-        LinkedHashSet<Enum<?>> set = new LinkedHashSet<>();
-
-        for (EnumSet<? extends Enum<?>> enumSet :
-                 Arrays.asList(EnumSet.allOf(DeserializationFeature.class),
-                               EnumSet.allOf(JsonGenerator.Feature.class),
-                               EnumSet.allOf(JsonParser.Feature.class),
-                               EnumSet.allOf(MapperFeature.class),
-                               EnumSet.allOf(SerializationFeature.class))) {
-            set.addAll(enumSet);
-        }
-
-        SET = Collections.unmodifiableSet(set);
-
-        TreeMap<String,Enum<?>> map =
-            new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-        for (Enum<?> feature : SET) {
-            map.put(feature.name(), feature);
-        }
-
-        MAP = Collections.unmodifiableSortedMap(map);
-    }
+    public static final SortedMap<String,Enum<?>> MAP =
+        unmodifiableSortedMap(new EnumLookupMap(DeserializationFeature.class,
+                                                JsonGenerator.Feature.class,
+                                                JsonParser.Feature.class,
+                                                MapperFeature.class,
+                                                SerializationFeature.class));
 
     /**
      * Static method to configure an {@link ObjectMapper} feature.
