@@ -7,14 +7,17 @@ package ball.databind;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.beans.BeanInfo;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static java.beans.Introspector.getBeanInfo;
 
 /**
  * {@link JSONBean} {@link JsonDeserializer} implementation.  Supports
@@ -24,14 +27,19 @@ import java.util.ArrayList;
  * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
  * @version $Revision$
  */
-public class JSONBeanDeserializer extends JsonDeserializer<JSONBean> {
+public class JSONBeanDeserializer<T extends JSONBean>
+             extends JsonDeserializer<T> {
 
     /**
      * {@link ObjectMapper}
      */
-    protected static final ObjectMapper OM = new ObjectMapper();
+    protected static final ObjectMapper OM =
+        new ObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .configure(SerializationFeature.INDENT_OUTPUT, true);
 
-    private final Class<? extends JSONBean> supertype;
+    private final Class<? extends T> supertype;
     private final ArrayList<BeanInfo> list = new ArrayList<>();
 
     /**
@@ -43,9 +51,8 @@ public class JSONBeanDeserializer extends JsonDeserializer<JSONBean> {
      *                          (optional).  Must be subclasses of
      *                          {@code supertype}.
      */
-    @SafeVarargs
-    public JSONBeanDeserializer(Class<? extends JSONBean> supertype,
-                                Class<? extends JSONBean>... subtypes) {
+    public JSONBeanDeserializer(Class<? extends T> supertype,
+                                Class<?>... subtypes) {
         super();
 
         if (supertype != null) {
@@ -55,10 +62,9 @@ public class JSONBeanDeserializer extends JsonDeserializer<JSONBean> {
         }
 
         try {
-            for (Class<? extends JSONBean> subtype : subtypes) {
+            for (Class<?> subtype : subtypes) {
                 if (supertype.isAssignableFrom(subtype)) {
-                    list.add(Introspector.getBeanInfo(subtype,
-                                                      JSONBean.class));
+                    list.add(getBeanInfo(subtype, JSONBean.class));
                 } else {
                     throw new IllegalArgumentException(subtype.getName()
                                                        + " is not a subclass of "
@@ -71,10 +77,13 @@ public class JSONBeanDeserializer extends JsonDeserializer<JSONBean> {
     }
 
     @Override
-    public JSONBean deserialize(JsonParser parser,
-                                DeserializationContext context) throws IOException {
-        JsonNode node = parser.readValueAsTree();
-        String string = JSONBean.OM.writeValueAsString(node);
+    public Class<? extends T> handledType() { return supertype; }
+
+    @Override
+    public T deserialize(JsonParser parser,
+                         DeserializationContext context) throws IOException {
+        ObjectMapper om = (ObjectMapper) parser.getCodec();
+        JsonNode node = om.readTree(parser);
         Class<? extends JSONBean> type = null;
 
         for (BeanInfo info : list) {
@@ -82,7 +91,7 @@ public class JSONBeanDeserializer extends JsonDeserializer<JSONBean> {
                 type =
                     info.getBeanDescriptor()
                     .getBeanClass()
-                    .asSubclass(JSONBean.class);
+                    .asSubclass(supertype);
                 break;
             }
         }
@@ -91,11 +100,28 @@ public class JSONBeanDeserializer extends JsonDeserializer<JSONBean> {
             type = supertype;
         }
 
-        JSONBean bean = JSONBeanDeserializer.OM.treeToValue(node, type);
+        JSONBean bean = OM.treeToValue(node, type);
 
         bean.node = node;
+        initialize(bean, bean.node, OM.writeValueAsString(node));
 
-        return bean;
+        return supertype.cast(bean);
+    }
+
+    /**
+     * Callback to allow subclass implementations to initialize the
+     * resulting {@link JSONBean} with the parse-tree ({@link JsonNode}).
+     *
+     * @param   bean            The {@link JSONBean} to initialize.
+     * @param   node            The {@link JsonNode}.
+     * @param   node            The JSON {@link String}.
+     *
+     * @throws  IOException     If there is a problem initializing the
+     *                          {@link JSONBean}.
+     */
+    protected void initialize(JSONBean bean,
+                              JsonNode node,
+                              String string) throws IOException {
     }
 
     private boolean hasAll(JsonNode node, PropertyDescriptor... properties) {

@@ -1,3 +1,8 @@
+2017-09-16  Allen D. Ball  <ball@sol>
+
+	* src/main/java/ball/databind/JSONBeanDeserializer.java:
+	Added generic parameter.
+
 2017-09-15  Allen D. Ball  <ball@sol>
 
 	* src/main/java/ball/databind/PolymorphicTypeMap.java:
