@@ -25,7 +25,7 @@ public class ModuleImpl extends SimpleModule {
     public ModuleImpl() {
         super(ModuleImpl.class.getPackage().getName());
 
-        addSerializer(JSONBean.class, new JSONBean.Serializer());
+        addSerializer(JSONBean.class, new JSONBeanSerializer());
     }
 
     @Override

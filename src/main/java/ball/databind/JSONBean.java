@@ -5,15 +5,11 @@
  */
 package ball.databind;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import java.io.IOException;
 
 /**
  * Abstract base class for bean implementations that wrap a
@@ -62,25 +58,5 @@ public abstract class JSONBean {
         }
 
         return (string != null) ? string : super.toString();
-    }
-
-    /**
-     * {@link JSONBean} {@link JsonSerializer} implementation.
-     */
-    public static class Serializer extends JsonSerializer<JSONBean> {
-
-        /**
-         * Sole constructor.
-         */
-        public Serializer() { super(); }
-
-        @Override
-        public void serialize(JSONBean value, JsonGenerator generator,
-                              SerializerProvider serializers) throws IOException {
-            generator.writeTree(value.asJsonNode());
-        }
-
-        @Override
-        public String toString() { return super.toString(); }
     }
 }
