@@ -114,7 +114,7 @@ public class JSONBeanDeserializer<T extends JSONBean>
      *
      * @param   bean            The {@link JSONBean} to initialize.
      * @param   node            The {@link JsonNode}.
-     * @param   node            The JSON {@link String}.
+     * @param   string          The JSON {@link String}.
      *
      * @throws  IOException     If there is a problem initializing the
      *                          {@link JSONBean}.
