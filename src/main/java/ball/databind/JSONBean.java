@@ -38,13 +38,6 @@ public abstract class JSONBean {
      */
     protected JSONBean() { }
 
-    /**
-     * Method to get this {@link JSONBean} as a {@link JsonNode}.
-     *
-     * @return  The {@link JSONBean} as a {@link JsonNode}.
-     */
-    public JsonNode asJsonNode() { return node; }
-
     @Override
     public String toString() {
         String string = null;

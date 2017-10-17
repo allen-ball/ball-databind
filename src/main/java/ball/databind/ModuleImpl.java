@@ -22,15 +22,13 @@ public class ModuleImpl extends SimpleModule {
     /**
      * Sole constructor.
      */
-    public ModuleImpl() {
-        super(ModuleImpl.class.getPackage().getName());
-
-        addSerializer(JSONBean.class, new JSONBeanSerializer());
-    }
+    public ModuleImpl() { super(ModuleImpl.class.getPackage().getName()); }
 
     @Override
     public void setupModule(Module.SetupContext context) {
         super.setupModule(context);
+
+        context.addBeanSerializerModifier(new JSONBeanSerializerModifier());
     }
 
     @Override
