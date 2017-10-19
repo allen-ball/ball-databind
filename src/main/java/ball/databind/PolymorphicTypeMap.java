@@ -62,6 +62,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
             }
 
             ClassLoader loader = getClass().getClassLoader();
+            Package pkg = getClass().getPackage();
 
             for (String key : properties.stringPropertyNames()) {
                 TreeSet<Class<?>> value = new TreeSet<>(ClassOrder.NAME);
@@ -72,16 +73,29 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
                     substring = substring.trim();
 
                     if (! isNil(substring)) {
-                        value.add(Class.forName(substring, true, loader));
+                        value.add(getClassFor(loader, pkg, substring));
                     }
                 }
 
-                put(Class.forName(key, true, loader),
+                put(getClassFor(loader, pkg, key),
                     value.toArray(new Class<?>[] { }));
             }
         } catch (Exception exception) {
             throw new ExceptionInInitializerError(exception);
         }
+    }
+
+    private Class<?> getClassFor(ClassLoader loader,
+                                 Package pkg, String name) throws Exception {
+        Class<?> cls = null;
+
+        try {
+            cls = Class.forName(pkg.getName() + "." + name, true, loader);
+        } catch (Exception exception) {
+            cls = Class.forName(name, true, loader);
+        }
+
+        return cls;
     }
 
     /**
@@ -320,8 +334,13 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
                 if (node != null) {
                     Class<?> subtype = list.subtypeFor(node);
 
-                    object = codec.readValue(parser, subtype);
-                    initialize(subtype.cast(object), codec, node);
+                    if (subtype != null) {
+                        object = codec.readValue(parser, subtype);
+                    } else {
+                        object = super.deserialize(parser, context);
+                    }
+
+                    initialize(list.supertype().cast(object), codec, node);
                 } else {
                     object =
                         codec.readValue(new JsonParserImpl(parser),

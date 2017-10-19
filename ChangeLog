@@ -1,3 +1,8 @@
+2017-10-18  Allen D. Ball  <ball@sol>
+
+	* src/main/java/ball/databind/PolymorphicTypeMap.java:
+	Infer containing package if not specified.
+
 2017-10-17  Allen D. Ball  <ball@sol>
 
 	* Replaced JSONBeanSerializer with JSONBeanSerializerModifier.
