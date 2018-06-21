@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2016, 2017 Allen D. Ball.  All rights reserved.
+ * Copyright 2016 - 2018 Allen D. Ball.  All rights reserved.
  */
 package ball.databind.ant.taskdefs;
 
@@ -27,6 +27,7 @@ import org.apache.tools.ant.PropertyHelper;
 import static ball.databind.ObjectMapperFeature.MAP;
 import static ball.databind.ObjectMapperFeature.configure;
 import static ball.util.StringUtil.isNil;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Abstract {@link.uri http://ant.apache.org/ Ant} base
@@ -56,11 +57,7 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
     protected ObjectMapperTask(ObjectMapper mapper) {
         super();
 
-        if (mapper != null) {
-            this.mapper = mapper;
-        } else {
-            throw new NullPointerException("mapper");
-        }
+        this.mapper = requireNonNull(mapper, "mapper");
     }
 
     public boolean getRegisterModules() { return registerModules; }

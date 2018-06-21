@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2017 Allen D. Ball.  All rights reserved.
+ * Copyright 2017, 2018 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import java.io.IOException;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * {@link JSONBean} {@link BeanSerializerModifier} implementation.
@@ -45,11 +47,8 @@ public class JSONBeanSerializerModifier extends BeanSerializerModifier {
         public SerializerImpl(JsonSerializer<?> serializer) {
             super();
 
-            if (serializer != null) {
-                this.serializer = (JsonSerializer<Object>) serializer;
-            } else {
-                throw new NullPointerException("serializer");
-            }
+            this.serializer =
+                (JsonSerializer<Object>) requireNonNull(serializer, "serializer");
         }
 
         @Override

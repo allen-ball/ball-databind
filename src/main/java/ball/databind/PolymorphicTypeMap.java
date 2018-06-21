@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2017 Allen D. Ball.  All rights reserved.
+ * Copyright 2017, 2018 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
@@ -30,6 +30,7 @@ import java.util.TreeSet;
 
 import static ball.util.StringUtil.isNil;
 import static java.beans.Introspector.getBeanInfo;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Class suitable for mapping polymorphic subtypes.  Subclasses can specify
@@ -170,11 +171,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
             public BeanInfoList(Class<?> supertype, Class<?>... subtypes) {
                 super(subtypes.length);
 
-                if (supertype != null) {
-                    this.supertype = supertype;
-                } else {
-                    throw new NullPointerException("supertype");
-                }
+                this.supertype = requireNonNull(supertype, "supertype");
 
                 try {
                     for (Class<?> subtype : subtypes) {
@@ -235,11 +232,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
             private JsonParserImpl(JsonNode node, ObjectCodec codec) {
                 super(node, codec);
 
-                if (node != null) {
-                    this.node = node;
-                } else {
-                    throw new NullPointerException("node");
-                }
+                this.node = requireNonNull(node, "node");
             }
 
             @Override
