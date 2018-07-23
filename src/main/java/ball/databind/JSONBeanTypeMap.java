@@ -1,12 +1,13 @@
 /*
  * $Id$
  *
- * Copyright 2017 Allen D. Ball.  All rights reserved.
+ * Copyright 2017, 2018 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 /**
@@ -27,7 +28,12 @@ public abstract class JSONBeanTypeMap extends PolymorphicTypeMap {
     protected void initialize(Object object,
                               ObjectCodec codec,
                               JsonNode node) throws IOException {
-        super.initialize(object, codec, node);
-        ((JSONBean) object).node = node;
+        JSONBean bean = (JSONBean) object;
+        JsonNode copy = node.deepCopy();
+
+        super.initialize(bean, codec, node);
+
+        bean.mapper = (ObjectMapper) codec;
+        bean.node = copy;
     }
 }

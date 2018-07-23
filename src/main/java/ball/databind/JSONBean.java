@@ -20,19 +20,9 @@ import java.io.Serializable;
  * @version $Revision$
  */
 public abstract class JSONBean implements Serializable {
-    private static final long serialVersionUID = 7361248610078338176L;
+    private static final long serialVersionUID = 4388214881251701753L;
 
-    /**
-     * Unconfigured {@link ObjectMapper} available for implementing subclass
-     * methods.
-     */
-    protected static final ObjectMapper OM =
-        new ObjectMapper()
-        .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        .configure(MapperFeature.USE_ANNOTATIONS, false)
-        .configure(SerializationFeature.INDENT_OUTPUT, true);
-
+    protected ObjectMapper mapper = ObjectMapperConfiguration.MAPPER;
     protected JsonNode node = null;
 
     /**
@@ -46,7 +36,7 @@ public abstract class JSONBean implements Serializable {
 
         if (node != null) {
             try {
-                string = OM.writeValueAsString(node);
+                string = mapper.writeValueAsString(node);
             } catch (Exception exception) {
                 throw new IllegalStateException(exception);
             }
