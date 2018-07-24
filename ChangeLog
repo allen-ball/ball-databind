@@ -3,7 +3,7 @@
 	* src/main/java/ball/databind/JSONBean.java,
 	src/main/java/ball/databind/JSONBeanTypeMap.java:
 	Record the ObjectCodec (ObjectMapper) that was used to deserialize
-	the JSONBean.
+	the JSONBean.  Added nodeAt(String) and textAt(String).
 
 2018-03-03  Allen D. Ball  <ball@sol.local>
 

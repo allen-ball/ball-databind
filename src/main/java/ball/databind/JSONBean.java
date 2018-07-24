@@ -20,7 +20,7 @@ import java.io.Serializable;
  * @version $Revision$
  */
 public abstract class JSONBean implements Serializable {
-    private static final long serialVersionUID = 4388214881251701753L;
+    private static final long serialVersionUID = -7720273815805776898L;
 
     protected ObjectMapper mapper = ObjectMapperConfiguration.MAPPER;
     protected JsonNode node = null;
@@ -29,6 +29,36 @@ public abstract class JSONBean implements Serializable {
      * Sole constructor.
      */
     protected JSONBean() { }
+
+    /**
+     * Convenience method to call {@link JsonNode#at(String)}.
+     *
+     * @param   expression      The {@link String} respresentation of the
+     *                          {@link com.fasterxml.jackson.core.JsonPointer}.
+     *
+     * @return  {@link JsonNode} that matches given
+     *          {@link com.fasterxml.jackson.core.JsonPointer}: if no match
+     *          exists, will return a {@link JsonNode} for which
+     *          {@link com.fasterxml.jackson.core.TreeNode#isMissingNode()}
+     *          returns {@code true}.
+     */
+    protected JsonNode nodeAt(String expression) {
+        return (expression != null) ? node.at(expression) : null;
+    }
+
+    /**
+     * Convenience method to get text for a node.
+     * See {@link #nodeAt(String)}.
+     *
+     * @param   expression      See {@link #nodeAt(String)}.
+     *
+     * @return  {@link JsonNode#asText()} of {@link #nodeAt(String)}.
+     */
+    protected String textAt(String expression) {
+        JsonNode node = nodeAt(expression);
+
+        return (node != null && (! node.isMissingNode())) ? node.asText() : null;
+    }
 
     @Override
     public String toString() {
