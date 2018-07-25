@@ -28,12 +28,13 @@ public abstract class JSONBeanTypeMap extends PolymorphicTypeMap {
     protected void initialize(Object object,
                               ObjectCodec codec,
                               JsonNode node) throws IOException {
-        JSONBean bean = (JSONBean) object;
-        JsonNode copy = node.deepCopy();
+        super.initialize(object, codec, node);
 
-        super.initialize(bean, codec, node);
+        if (object instanceof JSONBean) {
+            JSONBean bean = (JSONBean) object;
 
-        bean.mapper = (ObjectMapper) codec;
-        bean.node = copy;
+            bean.mapper = (ObjectMapper) codec;
+            bean.node = node.deepCopy();
+        }
     }
 }
