@@ -22,8 +22,8 @@ import java.io.Serializable;
 public abstract class JSONBean implements Serializable {
     private static final long serialVersionUID = -7720273815805776898L;
 
-    protected ObjectMapper mapper = ObjectMapperConfiguration.MAPPER;
-    protected JsonNode node = null;
+    /** @serial */ protected ObjectMapper mapper = ObjectMapperConfiguration.MAPPER;
+    /** @serial */ protected JsonNode node = null;
 
     /**
      * Sole constructor.
