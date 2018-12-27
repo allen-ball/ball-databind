@@ -1,11 +1,10 @@
 /*
  * $Id$
  *
- * Copyright 2017 Allen D. Ball.  All rights reserved.
+ * Copyright 2017, 2018 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
-import ball.io.IOUtil;
 import ball.util.EnumLookupMap;
 import ball.util.PropertiesImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,16 +47,13 @@ public abstract class AbstractObjectMapperConfiguration
         super();
 
         String name = getClass().getSimpleName() + ".properties";
-        InputStream in = getClass().getResourceAsStream(name);
 
-        if (in != null) {
-            try {
+        try (InputStream in = getClass().getResourceAsStream(name)) {
+            if (in != null) {
                 load(in);
-            } catch (Exception exception) {
-                throw new ExceptionInInitializerError(exception);
-            } finally {
-                IOUtil.close(in);
             }
+        } catch (Exception exception) {
+            throw new ExceptionInInitializerError(exception);
         }
     }
 

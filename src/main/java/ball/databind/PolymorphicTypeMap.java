@@ -5,7 +5,6 @@
  */
 package ball.databind;
 
-import ball.io.IOUtil;
 import ball.util.ClassOrder;
 import ball.util.PropertiesImpl;
 import com.fasterxml.jackson.core.JsonParser;
@@ -58,7 +57,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
                 try {
                     properties.load(in);
                 } finally {
-                    IOUtil.close(in);
+                    in.close();
                 }
             }
 
