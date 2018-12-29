@@ -5,10 +5,10 @@
  */
 package ball.databind.ant.taskdefs;
 
-import ball.util.MapUtil;
-import ball.util.PropertiesImpl;
+import ball.databind.ObjectMapperFeature;
 import ball.util.ant.taskdefs.AbstractClasspathTask;
 import ball.util.ant.taskdefs.AntTask;
+import ball.util.ant.taskdefs.ConfigurableAntTask;
 import ball.util.ant.taskdefs.NotNull;
 import ball.util.ant.types.StringAttributeType;
 import com.fasterxml.jackson.databind.JavaType;
@@ -25,7 +25,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PropertyHelper;
 
 import static ball.databind.ObjectMapperFeature.MAP;
-import static ball.databind.ObjectMapperFeature.configure;
 import static ball.util.StringUtil.isNil;
 import static java.util.Objects.requireNonNull;
 
@@ -38,7 +37,8 @@ import static java.util.Objects.requireNonNull;
  * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
  * @version $Revision$
  */
-public abstract class ObjectMapperTask extends AbstractClasspathTask {
+public abstract class ObjectMapperTask extends AbstractClasspathTask
+                                       implements ConfigurableAntTask {
     private boolean registerModules = false;
     private final ArrayList<Setting> settings = new ArrayList<>();
     protected final ObjectMapper mapper;
@@ -75,11 +75,6 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
         super.init();
 
         try {
-            PropertiesImpl properties = new PropertiesImpl();
-
-            MapUtil.copy(getProject().getProperties(), properties);
-            properties.configure(this);
-
             if (getRegisterModules()) {
                 mapper.registerModules(ObjectMapper.findModules(getClassLoader()));
             }
@@ -87,14 +82,16 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
             for (Map.Entry<String,Object> entry :
                      getProject().getProperties().entrySet()) {
                 if (MAP.containsKey(entry.getKey())) {
-                    configure(mapper,
-                              MAP.get(entry.getKey()),
-                              PropertyHelper.toBoolean(entry.getValue()));
+                    ObjectMapperFeature.configure(mapper,
+                                                  MAP.get(entry.getKey()),
+                                                  PropertyHelper.toBoolean(entry.getValue()));
                 }
             }
 
             for (Setting setting : settings) {
-                configure(mapper, setting.getEnum(), setting.booleanValue());
+                ObjectMapperFeature.configure(mapper,
+                                              setting.getEnum(),
+                                              setting.booleanValue());
             }
         } catch (BuildException exception) {
             throw exception;
