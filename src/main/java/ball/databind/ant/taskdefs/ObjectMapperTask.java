@@ -62,9 +62,6 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
 
     public boolean getRegisterModules() { return registerModules; }
     public void setRegisterModules(boolean isSet) { registerModules = isSet; }
-    public void setRegisterModules(String string) {
-        setRegisterModules(PropertyHelper.toBoolean(string));
-    }
 
     public void addConfiguredConfigure(Setting setting) {
         settings.add(setting);
@@ -160,7 +157,6 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
         @NotNull
         public File getFile() { return file; }
         public void setFile(File file) { this.file = file; }
-        public void setFile(String path) { setFile(new File(path)); }
 
         @NotNull
         public String getType() { return type; }
