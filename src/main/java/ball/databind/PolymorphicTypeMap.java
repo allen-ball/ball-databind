@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2017, 2018 Allen D. Ball.  All rights reserved.
+ * Copyright 2017 - 2019 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import org.apache.commons.lang3.StringUtils;
 
-import static ball.util.StringUtil.isNil;
 import static java.beans.Introspector.getBeanInfo;
 import static java.util.Objects.requireNonNull;
 
@@ -72,7 +72,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
                          .split("[,\\p{Space}]+")) {
                     substring = substring.trim();
 
-                    if (! isNil(substring)) {
+                    if (! StringUtils.isEmpty(substring)) {
                         value.add(getClassFor(loader, pkg, substring));
                     }
                 }

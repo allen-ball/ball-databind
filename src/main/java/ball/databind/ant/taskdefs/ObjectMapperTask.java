@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2016 - 2018 Allen D. Ball.  All rights reserved.
+ * Copyright 2016 - 2019 Allen D. Ball.  All rights reserved.
  */
 package ball.databind.ant.taskdefs;
 
@@ -25,8 +25,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PropertyHelper;
 
 import static ball.databind.ObjectMapperFeature.MAP;
-import static ball.util.StringUtil.isNil;
 import static java.util.Objects.requireNonNull;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Abstract {@link.uri http://ant.apache.org/ Ant} base
@@ -122,7 +122,7 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
          * @return      The feature boolean value.
          */
         public boolean booleanValue() {
-            return (isNil(getValue())
+            return (isEmpty(getValue())
                         ? true
                         : PropertyHelper.toBoolean(getValue()));
         }
@@ -180,7 +180,7 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
             TypeFactory factory = mapper.getTypeFactory();
             JavaType type = null;
 
-            if (! isNil(getCollection())) {
+            if (! isEmpty(getCollection())) {
                 type =
                     factory
                     .constructCollectionType(getClassForName(getCollection())
