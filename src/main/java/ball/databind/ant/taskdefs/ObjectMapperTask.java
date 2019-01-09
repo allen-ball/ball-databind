@@ -21,6 +21,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PropertyHelper;
 
@@ -39,9 +43,10 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  */
 public abstract class ObjectMapperTask extends AbstractClasspathTask
                                        implements ConfigurableAntTask {
+    protected final ObjectMapper mapper;
+    @Getter @Setter
     private boolean registerModules = false;
     private final ArrayList<Setting> settings = new ArrayList<>();
-    protected final ObjectMapper mapper;
 
     /**
      * No-argument constructor.
@@ -60,9 +65,6 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
         this.mapper = requireNonNull(mapper, "mapper");
     }
 
-    public boolean getRegisterModules() { return registerModules; }
-    public void setRegisterModules(boolean isSet) { registerModules = isSet; }
-
     public void addConfiguredConfigure(Setting setting) {
         settings.add(setting);
     }
@@ -72,7 +74,7 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
         super.init();
 
         try {
-            if (getRegisterModules()) {
+            if (isRegisterModules()) {
                 mapper.registerModules(ObjectMapper.findModules(getClassLoader()));
             }
 
@@ -102,12 +104,8 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
      *
      * {@bean.info}
      */
+    @NoArgsConstructor @ToString
     public static class Setting extends StringAttributeType {
-
-        /**
-         * Sole constructor.
-         */
-        public Setting() { super(); }
 
         /**
          * Method to get the feature {@link Enum}.
@@ -136,9 +134,13 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
      * {@bean.info}
      */
     @AntTask("om-read-value")
+    @ToString
     public static class ReadValue extends ObjectMapperTask {
+        @NotNull @Getter @Setter
         private File file = null;
+        @NotNull @Getter @Setter
         private String type = null;
+        @Getter @Setter
         private String collection = null;
 
         /**
@@ -154,22 +156,9 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
          */
         protected ReadValue(ObjectMapper mapper) { super(mapper); }
 
-        @NotNull
-        public File getFile() { return file; }
-        public void setFile(File file) { this.file = file; }
-
-        @NotNull
-        public String getType() { return type; }
-        public void setType(String type) { this.type = type; }
-
-        public String getCollection() { return collection; }
-        public void setCollection(String collection) {
-            this.collection = collection;
-        }
-
         /**
-         * Method to construct a {@link JavaType} from {@link #getType()}
-         * and {@link #getCollection()}.
+         * Method to construct a {@link JavaType} from {@code getType()} and
+         * {@code getCollection()}.
          *
          * @return      The {@link JavaType}.
          *
