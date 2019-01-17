@@ -6,8 +6,9 @@
 package ball.databind.ant.taskdefs;
 
 import ball.databind.ObjectMapperFeature;
-import ball.util.ant.taskdefs.AbstractClasspathTask;
+import ball.util.ant.taskdefs.AnnotatedAntTask;
 import ball.util.ant.taskdefs.AntTask;
+import ball.util.ant.taskdefs.ClasspathDelegateAntTask;
 import ball.util.ant.taskdefs.ConfigurableAntTask;
 import ball.util.ant.taskdefs.NotNull;
 import ball.util.ant.types.StringAttributeType;
@@ -25,28 +26,35 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PropertyHelper;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.ClasspathUtils;
 
 import static ball.databind.ObjectMapperFeature.MAP;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
- * Abstract {@link.uri http://ant.apache.org/ Ant} base
- * {@link org.apache.tools.ant.Task} for {@link ObjectMapper} tasks.
+ * Abstract {@link.uri http://ant.apache.org/ Ant} base {@link Task} for
+ * {@link ObjectMapper} tasks.
  *
  * {@bean.info}
  *
  * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
  * @version $Revision$
  */
-public abstract class ObjectMapperTask extends AbstractClasspathTask
-                                       implements ConfigurableAntTask {
-    protected final ObjectMapper mapper;
+public abstract class ObjectMapperTask extends Task
+                                       implements AnnotatedAntTask,
+                                                  ClasspathDelegateAntTask,
+                                                  ConfigurableAntTask {
+    @Getter @Setter @Accessors(chain = true, fluent = true)
+    private ClasspathUtils.Delegate delegate = null;
     @Getter @Setter
     private boolean registerModules = false;
     private final ArrayList<Setting> settings = new ArrayList<>();
+    protected final ObjectMapper mapper;
 
     /**
      * No-argument constructor.
@@ -72,6 +80,8 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
     @Override
     public void init() throws BuildException {
         super.init();
+        ClasspathDelegateAntTask.super.init();
+        ConfigurableAntTask.super.init();
 
         try {
             if (isRegisterModules()) {
@@ -97,6 +107,12 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask
         } catch (Throwable throwable) {
             throw new BuildException(throwable);
         }
+    }
+
+    @Override
+    public void execute() throws BuildException {
+        super.execute();
+        AnnotatedAntTask.super.execute();
     }
 
     /**
