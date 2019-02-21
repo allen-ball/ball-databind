@@ -40,7 +40,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  * Abstract {@link.uri http://ant.apache.org/ Ant} base {@link Task} for
  * {@link ObjectMapper} tasks.
  *
- * {@bean.info}
+ * {@ant.task}
  *
  * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
  * @version $Revision$
@@ -147,7 +147,7 @@ public abstract class ObjectMapperTask extends Task
      * {@link org.apache.tools.ant.Task} to invoke
      * {@link ObjectMapper#readValue(File,Class)}.
      *
-     * {@bean.info}
+     * {@ant.task}
      */
     @AntTask("om-read-value")
     @ToString
