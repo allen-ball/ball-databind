@@ -5,7 +5,6 @@
  */
 package ball.databind;
 
-import ball.util.ClassOrder;
 import ball.util.PropertiesImpl;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
@@ -29,6 +28,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 
 import static java.beans.Introspector.getBeanInfo;
+import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -46,7 +46,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
      * Sole constructor.
      */
     protected PolymorphicTypeMap() {
-        super(ClassOrder.NAME);
+        super(comparing(t -> t.getName()));
 
         try {
             PropertiesImpl properties = new PropertiesImpl();
@@ -65,7 +65,8 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
             Package pkg = getClass().getPackage();
 
             for (String key : properties.stringPropertyNames()) {
-                TreeSet<Class<?>> value = new TreeSet<>(ClassOrder.NAME);
+                TreeSet<Class<?>> value =
+                    new TreeSet<>(comparing(t -> t.getName()));
 
                 for (String substring :
                          properties.getProperty(key)
