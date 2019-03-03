@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2017, 2018 Allen D. Ball.  All rights reserved.
+ * Copyright 2017 - 2019 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import java.io.IOException;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import static java.util.Objects.requireNonNull;
 
@@ -21,13 +23,8 @@ import static java.util.Objects.requireNonNull;
  * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
  * @version $Revision$
  */
+@NoArgsConstructor @ToString
 public class JSONBeanSerializerModifier extends BeanSerializerModifier {
-
-    /**
-     * Sole constructor.
-     */
-    public JSONBeanSerializerModifier() { super(); }
-
     @Override
     public JsonSerializer<?> modifySerializer(SerializationConfig config,
                                               BeanDescription description,
@@ -36,9 +33,6 @@ public class JSONBeanSerializerModifier extends BeanSerializerModifier {
                     ? new SerializerImpl(serializer)
                     : serializer);
     }
-
-    @Override
-    public String toString() { return super.toString(); }
 
     private class SerializerImpl extends JsonSerializer<Object> {
         private final JsonSerializer<Object> serializer;

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2017, 2018 Allen D. Ball.  All rights reserved.
+ * Copyright 2017 - 2019 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.Serializable;
+import lombok.NoArgsConstructor;
+
+import static lombok.AccessLevel.PROTECTED;
 
 /**
  * Abstract base class for bean implementations that wrap a
@@ -19,16 +22,12 @@ import java.io.Serializable;
  * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
  * @version $Revision$
  */
+@NoArgsConstructor(access = PROTECTED)
 public abstract class JSONBean implements Serializable {
     private static final long serialVersionUID = -7720273815805776898L;
 
     /** @serial */ protected ObjectMapper mapper = ObjectMapperConfiguration.MAPPER;
     /** @serial */ protected JsonNode node = null;
-
-    /**
-     * Sole constructor.
-     */
-    protected JSONBean() { }
 
     /**
      * Convenience method to call {@link JsonNode#at(String)}.
