@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * {@link JSONBean} {@link BeanSerializerModifier} implementation.
  *
- * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
+ * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
 @NoArgsConstructor @ToString

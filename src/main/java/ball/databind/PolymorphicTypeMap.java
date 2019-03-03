@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * the mapping in a {@link java.util.Properties} resource which will be
  * automatically loaded on instantiation.
  *
- * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
+ * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
 public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {

@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
  * Abstract base class for bean implementations that wrap a
  * {@link JsonNode}.
  *
- * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
+ * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
 @NoArgsConstructor(access = PROTECTED)

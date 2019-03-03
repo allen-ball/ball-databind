@@ -42,7 +42,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  *
  * {@ant.task}
  *
- * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
+ * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
 public abstract class ObjectMapperTask extends Task

@@ -18,7 +18,7 @@ import static java.util.Collections.unmodifiableSortedMap;
  * implementation is a trivial subclass combined with a corresponding
  * {@link java.util.Properties} file.
  *
- * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
+ * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
 public abstract class AbstractObjectMapperConfiguration

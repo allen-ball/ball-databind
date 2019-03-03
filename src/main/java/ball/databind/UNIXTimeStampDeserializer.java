@@ -16,7 +16,7 @@ import java.util.Date;
  * UNIX Time Stamp (seconds since epoch)
  * {@link com.fasterxml.jackson.databind.JsonDeserializer}
  *
- * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
+ * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
 public class UNIXTimeStampDeserializer extends StdDeserializer<Long> {
