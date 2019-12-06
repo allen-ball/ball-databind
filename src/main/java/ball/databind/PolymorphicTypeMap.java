@@ -1,12 +1,10 @@
 /*
  * $Id$
  *
- * Copyright 2017, 2018 Allen D. Ball.  All rights reserved.
+ * Copyright 2017 - 2019 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
-import ball.io.IOUtil;
-import ball.util.ClassOrder;
 import ball.util.PropertiesImpl;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
@@ -27,9 +25,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import org.apache.commons.lang3.StringUtils;
 
-import static ball.util.StringUtil.isNil;
 import static java.beans.Introspector.getBeanInfo;
+import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * the mapping in a {@link java.util.Properties} resource which will be
  * automatically loaded on instantiation.
  *
- * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
+ * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
 public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
@@ -47,7 +46,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
      * Sole constructor.
      */
     protected PolymorphicTypeMap() {
-        super(ClassOrder.NAME);
+        super(comparing(t -> t.getName()));
 
         try {
             PropertiesImpl properties = new PropertiesImpl();
@@ -58,7 +57,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
                 try {
                     properties.load(in);
                 } finally {
-                    IOUtil.close(in);
+                    in.close();
                 }
             }
 
@@ -66,14 +65,15 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
             Package pkg = getClass().getPackage();
 
             for (String key : properties.stringPropertyNames()) {
-                TreeSet<Class<?>> value = new TreeSet<>(ClassOrder.NAME);
+                TreeSet<Class<?>> value =
+                    new TreeSet<>(comparing(t -> t.getName()));
 
                 for (String substring :
                          properties.getProperty(key)
                          .split("[,\\p{Space}]+")) {
                     substring = substring.trim();
 
-                    if (! isNil(substring)) {
+                    if (! StringUtils.isEmpty(substring)) {
                         value.add(getClassFor(loader, pkg, substring));
                     }
                 }

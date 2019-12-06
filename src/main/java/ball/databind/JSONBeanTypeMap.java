@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2017, 2018 Allen D. Ball.  All rights reserved.
+ * Copyright 2017 - 2019 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
@@ -9,20 +9,19 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import lombok.NoArgsConstructor;
+
+import static lombok.AccessLevel.PROTECTED;
 
 /**
  * {@link JSONBean} {@link PolymorphicTypeMap}
  *
- * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
+ * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
+@NoArgsConstructor(access = PROTECTED)
 public abstract class JSONBeanTypeMap extends PolymorphicTypeMap {
     private static final long serialVersionUID = 8775770218915991160L;
-
-    /**
-     * Sole constructor.
-     */
-    protected JSONBeanTypeMap() { super(); }
 
     @Override
     protected void initialize(Object object,

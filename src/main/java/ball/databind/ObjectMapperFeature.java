@@ -20,7 +20,7 @@ import static java.util.Collections.unmodifiableSortedMap;
  * Abstract class with static {@link SortedMap} ({@link EnumLookupMap})
  * member of all {@link ObjectMapper} features.
  *
- * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
+ * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
 public abstract class ObjectMapperFeature {

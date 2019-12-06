@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:aether="antlib:org.eclipse.aether.ant"
-         xmlns:artifact="antlib:org.apache.maven.artifact.ant"
-         xmlns:ball="antlib:ball.util.ant"
-         xmlns:ivy="antlib:org.apache.ivy.ant"
-         xmlns:spring-boot="antlib:org.springframework.boot.ant"
+<project xmlns:resolver="antlib:org.apache.maven.resolver.ant"
+         xmlns:util="antlib:ball.util.ant"
          name="ball-databind" basedir="." default="jar">
 
   <description>
@@ -14,12 +11,12 @@
     $Id$
   </description>
 
-  <aether:resolve>
+  <resolver:resolve>
     <dependencies>
-      <dependency coords="ball:parent:2.0:xml:compile"/>
+      <dependency coords="ball:parent:20191206.0:xml:compile"/>
     </dependencies>
     <properties/>
-  </aether:resolve>
+  </resolver:resolve>
   <import file="${ball:parent:xml}"/>
 
   <target name="om-read-value"

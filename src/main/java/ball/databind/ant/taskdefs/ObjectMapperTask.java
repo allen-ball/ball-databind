@@ -1,14 +1,15 @@
 /*
  * $Id$
  *
- * Copyright 2016 - 2018 Allen D. Ball.  All rights reserved.
+ * Copyright 2016 - 2019 Allen D. Ball.  All rights reserved.
  */
 package ball.databind.ant.taskdefs;
 
-import ball.util.MapUtil;
-import ball.util.PropertiesImpl;
-import ball.util.ant.taskdefs.AbstractClasspathTask;
+import ball.databind.ObjectMapperFeature;
+import ball.util.ant.taskdefs.AnnotatedAntTask;
 import ball.util.ant.taskdefs.AntTask;
+import ball.util.ant.taskdefs.ClasspathDelegateAntTask;
+import ball.util.ant.taskdefs.ConfigurableAntTask;
 import ball.util.ant.taskdefs.NotNull;
 import ball.util.ant.types.StringAttributeType;
 import com.fasterxml.jackson.databind.JavaType;
@@ -21,24 +22,36 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PropertyHelper;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.ClasspathUtils;
 
 import static ball.databind.ObjectMapperFeature.MAP;
-import static ball.databind.ObjectMapperFeature.configure;
-import static ball.util.StringUtil.isNil;
 import static java.util.Objects.requireNonNull;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
- * Abstract {@link.uri http://ant.apache.org/ Ant} base
- * {@link org.apache.tools.ant.Task} for {@link ObjectMapper} tasks.
+ * Abstract {@link.uri http://ant.apache.org/ Ant} base {@link Task} for
+ * {@link ObjectMapper} tasks.
  *
- * {@bean.info}
+ * {@ant.task}
  *
- * @author {@link.uri mailto:ball@iprotium.com Allen D. Ball}
+ * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
-public abstract class ObjectMapperTask extends AbstractClasspathTask {
+public abstract class ObjectMapperTask extends Task
+                                       implements AnnotatedAntTask,
+                                                  ClasspathDelegateAntTask,
+                                                  ConfigurableAntTask {
+    @Getter @Setter @Accessors(chain = true, fluent = true)
+    private ClasspathUtils.Delegate delegate = null;
+    @Getter @Setter
     private boolean registerModules = false;
     private final ArrayList<Setting> settings = new ArrayList<>();
     protected final ObjectMapper mapper;
@@ -60,12 +73,6 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
         this.mapper = requireNonNull(mapper, "mapper");
     }
 
-    public boolean getRegisterModules() { return registerModules; }
-    public void setRegisterModules(boolean isSet) { registerModules = isSet; }
-    public void setRegisterModules(String string) {
-        setRegisterModules(PropertyHelper.toBoolean(string));
-    }
-
     public void addConfiguredConfigure(Setting setting) {
         settings.add(setting);
     }
@@ -73,28 +80,27 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
     @Override
     public void init() throws BuildException {
         super.init();
+        ClasspathDelegateAntTask.super.init();
+        ConfigurableAntTask.super.init();
 
         try {
-            PropertiesImpl properties = new PropertiesImpl();
-
-            MapUtil.copy(getProject().getProperties(), properties);
-            properties.configure(this);
-
-            if (getRegisterModules()) {
+            if (isRegisterModules()) {
                 mapper.registerModules(ObjectMapper.findModules(getClassLoader()));
             }
 
             for (Map.Entry<String,Object> entry :
                      getProject().getProperties().entrySet()) {
                 if (MAP.containsKey(entry.getKey())) {
-                    configure(mapper,
-                              MAP.get(entry.getKey()),
-                              PropertyHelper.toBoolean(entry.getValue()));
+                    ObjectMapperFeature.configure(mapper,
+                                                  MAP.get(entry.getKey()),
+                                                  PropertyHelper.toBoolean(entry.getValue()));
                 }
             }
 
             for (Setting setting : settings) {
-                configure(mapper, setting.getEnum(), setting.booleanValue());
+                ObjectMapperFeature.configure(mapper,
+                                              setting.getEnum(),
+                                              setting.booleanValue());
             }
         } catch (BuildException exception) {
             throw exception;
@@ -103,17 +109,19 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
         }
     }
 
+    @Override
+    public void execute() throws BuildException {
+        super.execute();
+        AnnotatedAntTask.super.execute();
+    }
+
     /**
      * {@link ObjectMapper} configuration setting.
      *
      * {@bean.info}
      */
+    @NoArgsConstructor @ToString
     public static class Setting extends StringAttributeType {
-
-        /**
-         * Sole constructor.
-         */
-        public Setting() { super(); }
 
         /**
          * Method to get the feature {@link Enum}.
@@ -128,7 +136,7 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
          * @return      The feature boolean value.
          */
         public boolean booleanValue() {
-            return (isNil(getValue())
+            return (isEmpty(getValue())
                         ? true
                         : PropertyHelper.toBoolean(getValue()));
         }
@@ -139,12 +147,16 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
      * {@link org.apache.tools.ant.Task} to invoke
      * {@link ObjectMapper#readValue(File,Class)}.
      *
-     * {@bean.info}
+     * {@ant.task}
      */
     @AntTask("om-read-value")
+    @ToString
     public static class ReadValue extends ObjectMapperTask {
+        @NotNull @Getter @Setter
         private File file = null;
+        @NotNull @Getter @Setter
         private String type = null;
+        @Getter @Setter
         private String collection = null;
 
         /**
@@ -160,23 +172,9 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
          */
         protected ReadValue(ObjectMapper mapper) { super(mapper); }
 
-        @NotNull
-        public File getFile() { return file; }
-        public void setFile(File file) { this.file = file; }
-        public void setFile(String path) { setFile(new File(path)); }
-
-        @NotNull
-        public String getType() { return type; }
-        public void setType(String type) { this.type = type; }
-
-        public String getCollection() { return collection; }
-        public void setCollection(String collection) {
-            this.collection = collection;
-        }
-
         /**
-         * Method to construct a {@link JavaType} from {@link #getType()}
-         * and {@link #getCollection()}.
+         * Method to construct a {@link JavaType} from {@code getType()} and
+         * {@code getCollection()}.
          *
          * @return      The {@link JavaType}.
          *
@@ -187,7 +185,7 @@ public abstract class ObjectMapperTask extends AbstractClasspathTask {
             TypeFactory factory = mapper.getTypeFactory();
             JavaType type = null;
 
-            if (! isNil(getCollection())) {
+            if (! isEmpty(getCollection())) {
                 type =
                     factory
                     .constructCollectionType(getClassForName(getCollection())
