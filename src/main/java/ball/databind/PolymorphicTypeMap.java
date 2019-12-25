@@ -46,7 +46,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
      * Sole constructor.
      */
     protected PolymorphicTypeMap() {
-        super(comparing(t -> t.getName()));
+        super(comparing(Class::getName));
 
         try {
             PropertiesImpl properties = new PropertiesImpl();
@@ -66,7 +66,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
 
             for (String key : properties.stringPropertyNames()) {
                 TreeSet<Class<?>> value =
-                    new TreeSet<>(comparing(t -> t.getName()));
+                    new TreeSet<>(comparing(Class::getName));
 
                 for (String substring :
                          properties.getProperty(key)
