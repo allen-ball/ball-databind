@@ -1,10 +1,12 @@
 /*
  * $Id$
  *
- * Copyright 2019 Allen D. Ball.  All rights reserved.
+ * Copyright 2019, 2020 Allen D. Ball.  All rights reserved.
  */
 /**
  * Data Binding Utilities
+ *
+ * {@pom.coordinates}
  *
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  */
