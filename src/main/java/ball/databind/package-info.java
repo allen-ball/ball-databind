@@ -4,7 +4,7 @@
  * Copyright 2019, 2020 Allen D. Ball.  All rights reserved.
  */
 /**
- * Data Binding Utilities
+ * Data Binding Utilities.
  *
  * {@pom.coordinates}
  *

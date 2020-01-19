@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2018 Allen D. Ball.  All rights reserved.
+ * Copyright 2018 - 2020 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
@@ -14,7 +14,7 @@ import java.util.Date;
 
 /**
  * UNIX Time Stamp (seconds since epoch)
- * {@link com.fasterxml.jackson.databind.JsonSerializer}
+ * {@link com.fasterxml.jackson.databind.JsonSerializer}.
  *
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
