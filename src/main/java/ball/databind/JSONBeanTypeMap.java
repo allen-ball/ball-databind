@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright 2017 - 2019 Allen D. Ball.  All rights reserved.
+ * Copyright 2017 - 2020 Allen D. Ball.  All rights reserved.
  */
 package ball.databind;
 
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.PROTECTED;
 
 /**
- * {@link JSONBean} {@link PolymorphicTypeMap}
+ * {@link JSONBean} {@link PolymorphicTypeMap}.
  *
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$

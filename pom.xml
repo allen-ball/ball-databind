@@ -8,12 +8,12 @@
   <name>Data Binding Utilities</name>
   <groupId>ball</groupId>
   <artifactId>ball-databind</artifactId>
-  <version>1.0.3</version>
+  <version>1.1.0</version>
   <packaging>jar</packaging>
   <parent>
     <groupId>ball</groupId>
     <artifactId>parent</artifactId>
-    <version>20200117.0</version>
+    <version>20200130.0</version>
     <relativePath>../ball/parent/pom.xml</relativePath>
   </parent>
   <properties>
