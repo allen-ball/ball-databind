@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import java.io.IOException;
 import java.util.Date;
+import lombok.ToString;
 
 /**
  * UNIX Time Stamp (seconds since epoch)
@@ -34,6 +35,7 @@ import java.util.Date;
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
+@ToString
 public class UNIXTimeStampSerializer extends StdSerializer<Long> {
     private static final long serialVersionUID = -4952546998424181027L;
 
@@ -51,7 +53,4 @@ public class UNIXTimeStampSerializer extends StdSerializer<Long> {
 
         generator.writeObject(date);
     }
-
-    @Override
-    public String toString() { return super.toString(); }
 }

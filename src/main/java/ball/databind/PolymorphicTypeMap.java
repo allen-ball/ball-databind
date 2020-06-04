@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 import static java.beans.Introspector.getBeanInfo;
@@ -154,6 +155,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
         return super.put(key, value);
     }
 
+    @ToString
     private class DeserializerModifier extends BeanDeserializerModifier {
         public DeserializerModifier() { super(); }
 
@@ -174,9 +176,6 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
 
             return deserializer;
         }
-
-        @Override
-        public String toString() { return super.toString(); }
 
         private class BeanInfoList extends ArrayList<BeanInfo> {
             private static final long serialVersionUID = 1008165295877024242L;
@@ -237,6 +236,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
             }
         }
 
+        @ToString
         private class JsonParserImpl extends TreeTraversingParser {
             protected JsonNode node = null;
 
@@ -249,13 +249,11 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
 
                 this.node = requireNonNull(node, "node");
             }
-
-            @Override
-            public String toString() { return super.toString(); }
         }
 
+        @ToString
         private class BeanDeserializerImpl extends BeanDeserializer {
-            private static final long serialVersionUID = 3127841504650850219L;
+            private static final long serialVersionUID = 7600217898656123257L;
 
             private final BeanInfoList list;
 
@@ -303,13 +301,11 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
 
                 return object;
             }
-
-            @Override
-            public String toString() { return super.toString(); }
         }
 
+        @ToString
         private class AbstractDeserializerImpl extends AbstractDeserializer {
-            private static final long serialVersionUID = -7129844813984757944L;
+            private static final long serialVersionUID = -7887072343275693448L;
 
             private final BeanInfoList list;
 
@@ -357,9 +353,6 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
 
                 return object;
             }
-
-            @Override
-            public String toString() { return super.toString(); }
         }
     }
 }

@@ -49,6 +49,7 @@ public class JSONBeanSerializerModifier extends BeanSerializerModifier {
                     : serializer);
     }
 
+    @ToString
     private class SerializerImpl extends JsonSerializer<Object> {
         private final JsonSerializer<Object> serializer;
 
@@ -69,8 +70,5 @@ public class JSONBeanSerializerModifier extends BeanSerializerModifier {
                 serializer.serialize(value, generator, serializers);
             }
         }
-
-        @Override
-        public String toString() { return super.toString(); }
     }
 }
