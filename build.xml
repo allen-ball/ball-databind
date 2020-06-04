@@ -43,7 +43,7 @@
           description="--> Invokes &lt;om-read-value/&gt; task."
           depends="jar-classes">
     <taskdef classpathref="build.classpath"
-             resource="ball/databind/ant/defaults.properties"/>
+             resource="ball/databind/ant/antlib.xml"/>
     <om-read-value classpathref="build.classpath">
       <configure name="INDENT_OUTPUT"/>
     </om-read-value>
