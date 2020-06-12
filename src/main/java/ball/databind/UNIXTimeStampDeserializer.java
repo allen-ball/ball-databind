@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import java.io.IOException;
 import java.util.Date;
+import lombok.ToString;
 
 /**
  * UNIX Time Stamp (seconds since epoch)
@@ -34,6 +35,7 @@ import java.util.Date;
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
+@ToString
 public class UNIXTimeStampDeserializer extends StdDeserializer<Long> {
     private static final long serialVersionUID = 4297437977249133382L;
 
@@ -50,8 +52,5 @@ public class UNIXTimeStampDeserializer extends StdDeserializer<Long> {
 
         return (date != null) ? (date.getTime() / 1000) : null;
     }
-
-    @Override
-    public String toString() { return super.toString(); }
 }
 
