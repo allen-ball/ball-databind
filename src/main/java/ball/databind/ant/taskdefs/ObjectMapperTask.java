@@ -39,6 +39,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -48,7 +50,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.ClasspathUtils;
 
 import static ball.databind.ObjectMapperFeature.MAP;
-import static java.util.Objects.requireNonNull;
+import static lombok.AccessLevel.PROTECTED;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -60,6 +62,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
  * @version $Revision$
  */
+@RequiredArgsConstructor(access = PROTECTED)
 public abstract class ObjectMapperTask extends Task
                                        implements AnnotatedAntTask,
                                                   ClasspathDelegateAntTask,
@@ -69,24 +72,13 @@ public abstract class ObjectMapperTask extends Task
     @Getter @Setter
     private boolean registerModules = false;
     private final ArrayList<Setting> settings = new ArrayList<>();
+    @NonNull
     protected final ObjectMapper mapper;
 
     /**
      * No-argument constructor.
      */
     protected ObjectMapperTask() { this(new ObjectMapper()); }
-
-    /**
-     * Protected constructor to allow subclasses to specify the
-     * {@link ObjectMapper}.
-     *
-     * @param   mapper          The {@link ObjectMapper}.
-     */
-    protected ObjectMapperTask(ObjectMapper mapper) {
-        super();
-
-        this.mapper = requireNonNull(mapper, "mapper");
-    }
 
     public void addConfiguredConfigure(Setting setting) {
         settings.add(setting);
