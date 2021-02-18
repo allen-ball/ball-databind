@@ -53,4 +53,3 @@ public class UNIXTimeStampDeserializer extends StdDeserializer<Long> {
         return (date != null) ? (date.getTime() / 1000) : null;
     }
 }
-
