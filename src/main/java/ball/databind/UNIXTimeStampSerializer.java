@@ -2,10 +2,8 @@ package ball.databind;
 /*-
  * ##########################################################################
  * Data Binding Utilities
- * $Id$
- * $HeadURL$
  * %%
- * Copyright (C) 2016 - 2021 Allen D. Ball
+ * Copyright (C) 2016 - 2022 Allen D. Ball
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +31,6 @@ import lombok.ToString;
  * {@link com.fasterxml.jackson.databind.JsonSerializer}.
  *
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
- * @version $Revision$
  */
 @ToString
 public class UNIXTimeStampSerializer extends StdSerializer<Long> {
@@ -45,10 +42,8 @@ public class UNIXTimeStampSerializer extends StdSerializer<Long> {
     public UNIXTimeStampSerializer() { super(Long.class); }
 
     @Override
-    public void serialize(Long value,
-                          JsonGenerator generator,
-                          SerializerProvider provider) throws IOException,
-                                                              JsonProcessingException {
+    public void serialize(Long value, JsonGenerator generator, SerializerProvider provider) throws IOException,
+                                                                                                   JsonProcessingException {
         Date date = new Date(value.longValue() * 1000);
 
         generator.writeObject(date);

@@ -2,10 +2,8 @@ package ball.databind;
 /*-
  * ##########################################################################
  * Data Binding Utilities
- * $Id$
- * $HeadURL$
  * %%
- * Copyright (C) 2016 - 2021 Allen D. Ball
+ * Copyright (C) 2016 - 2022 Allen D. Ball
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +34,6 @@ import static java.util.Collections.unmodifiableSortedMap;
  * member of all {@link ObjectMapper} features.
  *
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
- * @version $Revision$
  */
 public abstract class ObjectMapperFeature {
 
@@ -62,8 +59,7 @@ public abstract class ObjectMapperFeature {
      *                          If the feature {@link Enum} is not
      *                          recognized.
      */
-    public static void configure(ObjectMapper mapper,
-                                 Enum<?> feature, boolean value) {
+    public static void configure(ObjectMapper mapper, Enum<?> feature, boolean value) {
         if (feature instanceof MapperFeature) {
             mapper.configure((MapperFeature) feature, value);
         } else if (feature instanceof JsonGenerator.Feature) {
@@ -75,9 +71,7 @@ public abstract class ObjectMapperFeature {
         } else if (feature instanceof SerializationFeature) {
             mapper.configure((SerializationFeature) feature, value);
         } else {
-            throw new IllegalArgumentException("Unrecognized feature `"
-                                               + feature.getClass().getName()
-                                               + "." + feature.name() + "'");
+            throw new IllegalArgumentException("Unrecognized feature `" + feature.getClass().getName() + "." + feature.name() + "'");
         }
     }
 

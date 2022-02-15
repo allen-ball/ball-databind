@@ -2,10 +2,8 @@ package ball.databind.ant.taskdefs;
 /*-
  * ##########################################################################
  * Data Binding Utilities
- * $Id$
- * $HeadURL$
  * %%
- * Copyright (C) 2016 - 2021 Allen D. Ball
+ * Copyright (C) 2016 - 2022 Allen D. Ball
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,13 +58,10 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  * {@ant.task}
  *
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
- * @version $Revision$
  */
 @RequiredArgsConstructor(access = PROTECTED)
-public abstract class ObjectMapperTask extends Task
-                                       implements AnnotatedAntTask,
-                                                  ClasspathDelegateAntTask,
-                                                  ConfigurableAntTask {
+public abstract class ObjectMapperTask extends Task implements AnnotatedAntTask,
+                                                               ClasspathDelegateAntTask, ConfigurableAntTask {
     @Getter @Setter @Accessors(chain = true, fluent = true)
     private ClasspathUtils.Delegate delegate = null;
     @Getter @Setter
@@ -99,15 +94,12 @@ public abstract class ObjectMapperTask extends Task
                      getProject().getProperties().entrySet()) {
                 if (MAP.containsKey(entry.getKey())) {
                     ObjectMapperFeature.configure(mapper,
-                                                  MAP.get(entry.getKey()),
-                                                  PropertyHelper.toBoolean(entry.getValue()));
+                                                  MAP.get(entry.getKey()), PropertyHelper.toBoolean(entry.getValue()));
                 }
             }
 
             for (Setting setting : settings) {
-                ObjectMapperFeature.configure(mapper,
-                                              setting.getEnum(),
-                                              setting.booleanValue());
+                ObjectMapperFeature.configure(mapper, setting.getEnum(), setting.booleanValue());
             }
         } catch (BuildException exception) {
             throw exception;
@@ -143,9 +135,7 @@ public abstract class ObjectMapperTask extends Task
          * @return      The feature boolean value.
          */
         public boolean booleanValue() {
-            return (isEmpty(getValue())
-                        ? true
-                        : PropertyHelper.toBoolean(getValue()));
+            return (isEmpty(getValue()) ? true : PropertyHelper.toBoolean(getValue()));
         }
     }
 
@@ -194,15 +184,10 @@ public abstract class ObjectMapperTask extends Task
 
             if (! isEmpty(getCollection())) {
                 type =
-                    factory
-                    .constructCollectionType(getClassForName(getCollection())
-                                             .asSubclass(Collection.class),
-                                             getClassForName(getType()));
+                    factory.constructCollectionType(getClassForName(getCollection()).asSubclass(Collection.class),
+                                                    getClassForName(getType()));
             } else {
-                type =
-                    factory
-                    .constructSimpleType(getClassForName(getType()),
-                                         new JavaType[] { });
+                type = factory.constructSimpleType(getClassForName(getType()), new JavaType[] { });
             }
 
             return type;

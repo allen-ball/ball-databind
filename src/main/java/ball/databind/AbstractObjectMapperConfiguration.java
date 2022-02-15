@@ -2,10 +2,8 @@ package ball.databind;
 /*-
  * ##########################################################################
  * Data Binding Utilities
- * $Id$
- * $HeadURL$
  * %%
- * Copyright (C) 2016 - 2021 Allen D. Ball
+ * Copyright (C) 2016 - 2022 Allen D. Ball
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +32,8 @@ import static java.util.Collections.unmodifiableSortedMap;
  * {@link java.util.Properties} file.
  *
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
- * @version $Revision$
  */
-public abstract class AbstractObjectMapperConfiguration
-                      extends PropertiesImpl {
+public abstract class AbstractObjectMapperConfiguration extends PropertiesImpl {
     private static final long serialVersionUID = 3380012687021883148L;
 
     /**
@@ -51,8 +47,7 @@ public abstract class AbstractObjectMapperConfiguration
          */
         REGISTER_MODULES;
 
-        private static final SortedMap<String,Enum<?>> MAP =
-            unmodifiableSortedMap(new EnumLookupMap(Feature.class));
+        private static final SortedMap<String,Enum<?>> MAP = unmodifiableSortedMap(new EnumLookupMap(Feature.class));
     }
 
     /**
@@ -82,10 +77,8 @@ public abstract class AbstractObjectMapperConfiguration
     public ObjectMapper configure(ObjectMapper mapper) {
         for (String name : stringPropertyNames()) {
             if (ObjectMapperFeature.MAP.containsKey(name)) {
-                ObjectMapperFeature
-                    .configure(mapper,
-                               ObjectMapperFeature.MAP.get(name),
-                               Boolean.valueOf(getProperty(name)));
+                ObjectMapperFeature.configure(mapper,
+                                              ObjectMapperFeature.MAP.get(name), Boolean.valueOf(getProperty(name)));
             }
         }
 

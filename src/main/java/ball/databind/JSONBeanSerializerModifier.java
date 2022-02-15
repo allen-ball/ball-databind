@@ -2,10 +2,8 @@ package ball.databind;
 /*-
  * ##########################################################################
  * Data Binding Utilities
- * $Id$
- * $HeadURL$
  * %%
- * Copyright (C) 2016 - 2021 Allen D. Ball
+ * Copyright (C) 2016 - 2022 Allen D. Ball
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,14 +34,11 @@ import static java.util.Objects.requireNonNull;
  * {@link JSONBean} {@link BeanSerializerModifier} implementation.
  *
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
- * @version $Revision$
  */
 @NoArgsConstructor @ToString
 public class JSONBeanSerializerModifier extends BeanSerializerModifier {
     @Override
-    public JsonSerializer<?> modifySerializer(SerializationConfig config,
-                                              BeanDescription description,
-                                              JsonSerializer<?> serializer) {
+    public JsonSerializer<?> modifySerializer(SerializationConfig config, BeanDescription description, JsonSerializer<?> serializer) {
         return ((JSONBean.class.isAssignableFrom(description.getBeanClass()))
                     ? new SerializerImpl(serializer)
                     : serializer);
@@ -57,13 +52,11 @@ public class JSONBeanSerializerModifier extends BeanSerializerModifier {
         public SerializerImpl(JsonSerializer<?> serializer) {
             super();
 
-            this.serializer =
-                (JsonSerializer<Object>) requireNonNull(serializer, "serializer");
+            this.serializer = (JsonSerializer<Object>) requireNonNull(serializer, "serializer");
         }
 
         @Override
-        public void serialize(Object value, JsonGenerator generator,
-                              SerializerProvider serializers) throws IOException {
+        public void serialize(Object value, JsonGenerator generator, SerializerProvider serializers) throws IOException {
             if (value instanceof JSONBean && ((JSONBean) value).node != null) {
                 generator.writeTree(((JSONBean) value).node);
             } else {

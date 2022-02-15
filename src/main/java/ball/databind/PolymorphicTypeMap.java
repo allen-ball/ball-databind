@@ -2,10 +2,8 @@ package ball.databind;
 /*-
  * ##########################################################################
  * Data Binding Utilities
- * $Id$
- * $HeadURL$
  * %%
- * Copyright (C) 2016 - 2021 Allen D. Ball
+ * Copyright (C) 2016 - 2022 Allen D. Ball
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +51,6 @@ import static java.util.Objects.requireNonNull;
  * automatically loaded on instantiation.
  *
  * @author {@link.uri mailto:ball@hcf.dev Allen D. Ball}
- * @version $Revision$
  */
 public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
     private static final long serialVersionUID = -4465979259676184876L;
@@ -81,12 +78,9 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
             Package pkg = getClass().getPackage();
 
             for (String key : properties.stringPropertyNames()) {
-                TreeSet<Class<?>> value =
-                    new TreeSet<>(comparing(Class::getName));
+                TreeSet<Class<?>> value = new TreeSet<>(comparing(Class::getName));
 
-                for (String substring :
-                         properties.getProperty(key)
-                         .split("[,\\p{Space}]+")) {
+                for (String substring : properties.getProperty(key).split("[,\\p{Space}]+")) {
                     substring = substring.trim();
 
                     if (! StringUtils.isEmpty(substring)) {
@@ -94,16 +88,14 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
                     }
                 }
 
-                put(getClassFor(loader, pkg, key),
-                    value.toArray(new Class<?>[] { }));
+                put(getClassFor(loader, pkg, key), value.toArray(new Class<?>[] { }));
             }
         } catch (Exception exception) {
             throw new ExceptionInInitializerError(exception);
         }
     }
 
-    private Class<?> getClassFor(ClassLoader loader,
-                                 Package pkg, String name) throws Exception {
+    private Class<?> getClassFor(ClassLoader loader, Package pkg, String name) throws Exception {
         Class<?> cls = null;
 
         try {
@@ -137,18 +129,14 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
      * @throws  IOException     If there is a problem initializing the
      *                          {@link JSONBean}.
      */
-    protected void initialize(Object object,
-                              ObjectCodec codec,
-                              JsonNode node) throws IOException {
+    protected void initialize(Object object, ObjectCodec codec, JsonNode node) throws IOException {
     }
 
     @Override
     public Class<?>[] put(Class<?> key, Class<?>[] value) {
         for (Class<?> subtype : value) {
             if (! key.isAssignableFrom(subtype)) {
-                throw new IllegalArgumentException(subtype.getName()
-                                                   + " is not a subclass of "
-                                                   + key.getName());
+                throw new IllegalArgumentException(subtype.getName() + " is not a subclass of " + key.getName());
             }
         }
 
@@ -160,18 +148,14 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
         public DeserializerModifier() { super(); }
 
         @Override
-        public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config,
-                                                      BeanDescription description,
-                                                      JsonDeserializer<?> deserializer) {
+        public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config, BeanDescription description, JsonDeserializer<?> deserializer) {
             Class<?> key = description.getBeanClass();
 
             if (containsKey(key)) {
                 deserializer =
                     (deserializer instanceof BeanDeserializer)
-                        ? new BeanDeserializerImpl((BeanDeserializer) deserializer,
-                                                   key, get(key))
-                        : new AbstractDeserializerImpl(description,
-                                                       key, get(key));
+                        ? new BeanDeserializerImpl((BeanDeserializer) deserializer, key, get(key))
+                        : new AbstractDeserializerImpl(description, key, get(key));
             }
 
             return deserializer;
@@ -193,8 +177,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
                             add(getBeanInfo(subtype, supertype));
                         } else {
                             throw new IllegalArgumentException(subtype.getName()
-                                                               + " is not a subclass of "
-                                                               + supertype.getName());
+                                                               + " is not a subclass of " + supertype.getName());
                         }
                     }
                 } catch (Exception exception) {
@@ -209,10 +192,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
 
                 for (BeanInfo info : this) {
                     if (hasAll(node, info.getPropertyDescriptors())) {
-                        subtype =
-                            info.getBeanDescriptor()
-                            .getBeanClass()
-                            .asSubclass(supertype);
+                        subtype = info.getBeanDescriptor().getBeanClass().asSubclass(supertype);
                         break;
                     }
                 }
@@ -220,8 +200,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
                 return subtype;
             }
 
-            private boolean hasAll(JsonNode node,
-                                   PropertyDescriptor... properties) {
+            private boolean hasAll(JsonNode node, PropertyDescriptor... properties) {
                 boolean hasAll = true;
 
                 for (PropertyDescriptor property : properties) {
@@ -257,9 +236,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
 
             private final BeanInfoList list;
 
-            public BeanDeserializerImpl(BeanDeserializer deserializer,
-                                        Class<?> supertype,
-                                        Class<?>... subtypes) {
+            public BeanDeserializerImpl(BeanDeserializer deserializer, Class<?> supertype, Class<?>... subtypes) {
                 super(deserializer);
 
                 list = new BeanInfoList(supertype, subtypes);
@@ -269,8 +246,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
             public Class<?> handledType() { return list.supertype(); }
 
             @Override
-            public Object deserialize(JsonParser parser,
-                                      DeserializationContext context) throws IOException {
+            public Object deserialize(JsonParser parser, DeserializationContext context) throws IOException {
                 Object object = null;
                 ObjectCodec codec = parser.getCodec();
                 JsonNode node = null;
@@ -294,9 +270,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
 
                     initialize(list.supertype().cast(object), codec, node);
                 } else {
-                    object =
-                        codec.readValue(new JsonParserImpl(parser),
-                                        list.supertype());
+                    object = codec.readValue(new JsonParserImpl(parser), list.supertype());
                 }
 
                 return object;
@@ -309,9 +283,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
 
             private final BeanInfoList list;
 
-            public AbstractDeserializerImpl(BeanDescription description,
-                                            Class<?> supertype,
-                                            Class<?>... subtypes) {
+            public AbstractDeserializerImpl(BeanDescription description, Class<?> supertype, Class<?>... subtypes) {
                 super(description);
 
                 list = new BeanInfoList(supertype, subtypes);
@@ -321,8 +293,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
             public Class<?> handledType() { return list.supertype(); }
 
             @Override
-            public Object deserialize(JsonParser parser,
-                                      DeserializationContext context) throws IOException {
+            public Object deserialize(JsonParser parser, DeserializationContext context) throws IOException {
                 Object object = null;
                 ObjectCodec codec = parser.getCodec();
                 JsonNode node = null;
@@ -346,9 +317,7 @@ public abstract class PolymorphicTypeMap extends TreeMap<Class<?>,Class<?>[]> {
 
                     initialize(list.supertype().cast(object), codec, node);
                 } else {
-                    object =
-                        codec.readValue(new JsonParserImpl(parser),
-                                        list.supertype());
+                    object = codec.readValue(new JsonParserImpl(parser), list.supertype());
                 }
 
                 return object;
