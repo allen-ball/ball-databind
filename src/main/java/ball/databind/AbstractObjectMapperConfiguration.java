@@ -21,6 +21,7 @@ package ball.databind;
 import ball.util.EnumLookupMap;
 import ball.util.PropertiesImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.io.InputStream;
 import java.util.SortedMap;
 
@@ -68,6 +69,24 @@ public abstract class AbstractObjectMapperConfiguration extends PropertiesImpl {
     }
 
     /**
+     * Method to configure an {@link JsonMapper.Builder}.
+     *
+     * @param   builder         The {@link JsonMapper.Builder} to configure.
+     *
+     * @return  The {@link JsonMapper.Builder}.
+     */
+    public JsonMapper.Builder configure(JsonMapper.Builder builder) {
+        for (String name : stringPropertyNames()) {
+            if (ObjectMapperFeature.MAP.containsKey(name)) {
+                ObjectMapperFeature.configure(builder,
+                                              ObjectMapperFeature.MAP.get(name), Boolean.valueOf(getProperty(name)));
+            }
+        }
+
+        return builder;
+    }
+
+    /**
      * Method to configure an {@link ObjectMapper}.
      *
      * @param   mapper          The {@link ObjectMapper} to configure.
@@ -106,6 +125,8 @@ public abstract class AbstractObjectMapperConfiguration extends PropertiesImpl {
      * @return  The {@link ObjectMapper}.
      */
     public ObjectMapper newObjectMapper() {
-        return configure(new ObjectMapper());
+        JsonMapper.Builder builder = configure(JsonMapper.builder());
+
+        return configure(builder.build());
     }
 }
