@@ -6,6 +6,8 @@ Description
 -----------
 Data Binding Utilities.
 
+Javadoc is published at <https://allen-ball.github.io/ball-databind/>.
+
 
 License
 -------
